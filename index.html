@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portrait Clash Arena</title>
+    
+    <!-- 1. Resource Pre-fetching -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+    
+    <!-- 2. External Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    
+    <!-- 3. Frameworks and Import Maps -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+    {
+      "imports": {
+        "react/": "https://esm.sh/react@^19.2.3/",
+        "react": "https://esm.sh/react@^19.2.3",
+        "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+      }
+    }
+    </script>
+
+    <!-- 4. Component Styles -->
+    <style>
+      body {
+        font-family: 'Outfit', sans-serif;
+        background-color: #030712;
+        color: #f9fafb;
+        overflow: hidden;
+      }
+      .font-display {
+        font-family: 'Playfair Display', serif;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .clash-gradient {
+        background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, rgba(3, 7, 18, 1) 100%);
+      }
+      
+      @keyframes shimmer {
+        0% { transform: translateX(-150%) rotate(25deg); }
+        100% { transform: translateX(150%) rotate(25deg); }
+      }
+      .animate-shimmer-sweep {
+        position: relative;
+        overflow: hidden;
+        background: #080808;
+      }
+      .animate-shimmer-sweep::after {
+        content: "";
+        position: absolute;
+        top: -100%;
+        left: -100%;
+        width: 300%;
+        height: 300%;
+        background: linear-gradient(
+          to right,
+          transparent 0%,
+          rgba(255, 255, 255, 0.03) 45%,
+          rgba(255, 255, 255, 0.08) 50%,
+          rgba(255, 255, 255, 0.03) 55%,
+          transparent 100%
+        );
+        animation: shimmer 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+
+      @keyframes victory-pulse {
+        0% { transform: scale(0.5); opacity: 0; }
+        50% { opacity: 0.5; }
+        100% { transform: scale(2.5); opacity: 0; }
+      }
+      .animate-victory-pulse {
+        animation: victory-pulse 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+      }
+
+      @keyframes flash {
+        0% { opacity: 0; }
+        20% { opacity: 0.4; }
+        100% { opacity: 0; }
+      }
+      .animate-flash {
+        animation: flash 0.5s ease-out forwards;
+      }
+
+      @keyframes impact {
+        0% { transform: scale(1); }
+        20% { transform: scale(0.97) rotate(-0.5deg); }
+        50% { transform: scale(1.02) rotate(0.2deg); }
+        100% { transform: scale(1); }
+      }
+      .animate-impact {
+        animation: impact 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes vs-glow {
+        0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), inset 0 0 10px rgba(59, 130, 246, 0.2); }
+        50% { box-shadow: 0 0 50px rgba(59, 130, 246, 0.6), inset 0 0 20px rgba(59, 130, 246, 0.4); }
+      }
+      .animate-vs-glow {
+        animation: vs-glow 3s ease-in-out infinite;
+      }
+
+      @keyframes arena-float {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-10px) scale(1.01); }
+      }
+      .animate-arena-float {
+        animation: arena-float 8s ease-in-out infinite;
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
