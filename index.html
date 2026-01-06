@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Portrait Clash Arena</title>
     
     <!-- 1. Resource Pre-fetching -->
@@ -31,7 +31,10 @@
         font-family: 'Outfit', sans-serif;
         background-color: #030712;
         color: #f9fafb;
-        overflow: hidden;
+        overflow-x: hidden;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+        -webkit-user-select: none;
       }
       .font-display {
         font-family: 'Playfair Display', serif;
@@ -126,6 +129,13 @@
       ::-webkit-scrollbar-thumb {
         background: rgba(255, 255, 255, 0.1);
         border-radius: 10px;
+      }
+      
+      /* Mobile specific adjustments */
+      @media (max-width: 768px) {
+        .clash-container {
+          touch-action: pan-y pinch-zoom;
+        }
       }
     </style>
   </head>
