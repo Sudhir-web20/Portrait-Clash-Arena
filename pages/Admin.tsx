@@ -1,11 +1,16 @@
+
 import React, { useState, useEffect } from 'react';
 import { dbService } from '../db';
 import { Personality } from '../types';
+import { generateAIPortrait } from '../services/gemini';
+import { useToast } from '../components/Toast';
 
 const Admin: React.FC = () => {
   const [personalities, setPersonalities] = useState<Personality[]>([]);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [password, setPassword] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { showToast } = useToast();
   
   // Form State
   const [name, setName] = useState('');
@@ -18,10 +23,34 @@ const Admin: React.FC = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'arena123') { // Simplified for demo
+    if (password === 'arena123') {
       setIsAuthorized(true);
     } else {
       alert('Invalid Arena Key');
+    }
+  };
+
+  const handleAIQuery = async () => {
+    if (!name || !description) {
+      showToast("Need name and bio first!", "warning");
+      return;
+    }
+
+    setIsGenerating(true);
+    showToast("Invoking Gemini AI...", "info");
+    
+    try {
+      // Use archetypal descriptions to avoid direct celebrity likeness in prompts
+      const archetypePrompt = `A ${description.slice(0, 50)} character type, high-end editorial headshot`;
+      const base64Image = await generateAIPortrait(archetypePrompt);
+      if (base64Image) {
+        setImageUrl(base64Image);
+        showToast("Portrait Manifested", "success");
+      }
+    } catch (err) {
+      showToast("AI Request Failed", "error");
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -34,6 +63,7 @@ const Admin: React.FC = () => {
     setName('');
     setDescription('');
     setImageUrl('');
+    showToast("Challenger Added", "success");
   };
 
   const handleDelete = (id: string) => {
@@ -89,55 +119,74 @@ const Admin: React.FC = () => {
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        {/* Add Form */}
         <div className="lg:col-span-1">
           <form onSubmit={handleAdd} className="glass p-8 rounded-3xl space-y-6 sticky top-24">
             <h3 className="text-xl font-bold text-white mb-4">Add New Personality</h3>
             <div className="space-y-5">
               <div className="flex flex-col gap-2">
-                <label htmlFor="participant-name" className="text-xs font-bold text-gray-500 uppercase px-1">Full Name</label>
+                <label className="text-xs font-bold text-gray-500 uppercase px-1">Full Name</label>
                 <input 
-                  id="participant-name"
-                  name="participant-name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="e.g. Marie Curie"
+                  placeholder="e.g. The Visionary"
                   required
                 />
               </div>
+              
               <div className="flex flex-col gap-2">
-                <label htmlFor="participant-url" className="text-xs font-bold text-gray-500 uppercase px-1">Portrait URL</label>
-                <input 
-                  id="participant-url"
-                  name="participant-url"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="https://images.unsplash.com/..."
-                  required
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="participant-description" className="text-xs font-bold text-gray-500 uppercase px-1">Short Bio</label>
+                <label className="text-xs font-bold text-gray-500 uppercase px-1">Bio / Archetype</label>
                 <textarea 
-                  id="participant-description"
-                  name="participant-description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-blue-500 h-32 resize-none"
-                  placeholder="A brief history of their impact..."
+                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-blue-500 h-24 resize-none text-sm"
+                  placeholder="A tech leader in a black turtleneck..."
                   required
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between px-1">
+                  <label className="text-xs font-bold text-gray-500 uppercase">Portrait</label>
+                  <button 
+                    type="button"
+                    onClick={handleAIQuery}
+                    disabled={isGenerating}
+                    className="text-[9px] font-black text-blue-400 uppercase tracking-widest flex items-center gap-1 hover:text-blue-300 transition-colors disabled:opacity-50"
+                  >
+                    {isGenerating ? 'Manifesting...' : '✨ AI Magic'}
+                  </button>
+                </div>
+                <div className="relative aspect-square w-full rounded-2xl bg-black/50 border border-white/10 overflow-hidden flex items-center justify-center">
+                  {imageUrl ? (
+                    <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-gray-600 text-[10px] font-bold uppercase italic">No Image</span>
+                  )}
+                  {isGenerating && (
+                    <div className="absolute inset-0 bg-black/80 flex items-center justify-center">
+                      <div className="w-8 h-8 border-2 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+                    </div>
+                  )}
+                </div>
+                <input 
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-[10px] text-gray-400 focus:outline-none"
+                  placeholder="Or paste URL manually..."
                 />
               </div>
             </div>
-            <button type="submit" className="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-blue-500 hover:text-white transition-all shadow-xl active:scale-[0.98]">
+            <button 
+              type="submit" 
+              disabled={isGenerating || !imageUrl}
+              className="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-blue-500 hover:text-white transition-all shadow-xl active:scale-[0.98] disabled:opacity-50"
+            >
               Add to Arena
             </button>
           </form>
         </div>
 
-        {/* List */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between px-2">
             <h3 className="text-xl font-bold text-white">Current Participants ({personalities.length})</h3>
@@ -145,7 +194,9 @@ const Admin: React.FC = () => {
           <div className="space-y-3">
             {personalities.map(p => (
               <div key={p.id} className="glass p-4 rounded-2xl flex items-center gap-4 group hover:border-white/20 transition-all">
-                <img src={p.imageUrl} alt={p.name} className="w-16 h-16 rounded-xl object-cover ring-1 ring-white/10" />
+                <div className="w-16 h-16 rounded-xl overflow-hidden ring-1 ring-white/10 shrink-0 bg-black">
+                   <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover" />
+                </div>
                 <div className="flex-grow">
                   <h4 className="font-bold text-white">{p.name}</h4>
                   <p className="text-xs text-gray-500 line-clamp-1">{p.description}</p>
@@ -166,11 +217,6 @@ const Admin: React.FC = () => {
               </div>
             ))}
           </div>
-          {personalities.length === 0 && (
-            <div className="text-center py-20 glass rounded-3xl">
-              <p className="text-gray-500 italic">No participants found. Add your first one!</p>
-            </div>
-          )}
         </div>
       </div>
     </div>

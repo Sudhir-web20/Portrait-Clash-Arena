@@ -133,6 +133,24 @@ const App: React.FC = () => {
               <Route path="/history" element={<VoteHistory />} />
             </Routes>
           </main>
+
+          <footer className="relative z-50 py-8 px-6 border-t border-white/5 bg-black/40 backdrop-blur-xl">
+            <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="text-[10px] font-black text-gray-600 uppercase tracking-[0.3em]">
+                &copy; 2024 Portrait Clash Arena • High-Fidelity Voting
+              </div>
+              <div className="flex items-center gap-6">
+                <Link to="/admin" className="text-[10px] font-black text-gray-600 hover:text-blue-400 uppercase tracking-[0.3em] transition-colors">
+                  Arena Commander
+                </Link>
+                <span className="w-1 h-1 bg-white/10 rounded-full"></span>
+                <span className="text-[10px] font-black text-gray-700 uppercase tracking-[0.3em]">
+                  Powered by Gemini 2.5
+                </span>
+              </div>
+            </div>
+          </footer>
+
           {user && <AchievementNotifier user={user} />}
           <MobileBottomNav />
         </div>

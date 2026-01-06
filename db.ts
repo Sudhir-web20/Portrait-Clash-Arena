@@ -1,6 +1,7 @@
+
 import { Personality, Vote, Clash, RankTier, UserProfile, Achievement } from './types';
 
-const STORAGE_KEY = 'portrait_clash_arena_db_v8';
+const STORAGE_KEY = 'portrait_clash_arena_db_v11';
 const USER_KEY = 'pca_user_profile';
 const K_FACTOR = 32;
 
@@ -14,12 +15,36 @@ const getRankTier = (elo: number): RankTier => {
 };
 
 const INITIAL_PERSONALITIES = [
-  { name: 'Steve Jobs', description: 'Visionary co-founder of Apple Inc.', imageUrl: 'https://images.unsplash.com/photo-1550133730-695473e544be?q=80&w=800&auto=format&fit=crop' },
-  { name: 'Elon Musk', description: 'Business magnate leading Tesla and SpaceX.', imageUrl: 'https://images.unsplash.com/photo-1563200742-0f04ca447b97?q=80&w=800&auto=format&fit=crop' },
-  { name: 'Marie Curie', description: 'Pioneering researcher on radioactivity.', imageUrl: 'https://images.unsplash.com/photo-1567113463300-102550123354?q=80&w=800&auto=format&fit=crop' },
-  { name: 'Albert Einstein', description: 'Developer of the theory of relativity.', imageUrl: 'https://images.unsplash.com/photo-1544256718-3bcf237f3974?q=80&w=800&auto=format&fit=crop' },
-  { name: 'Leonardo da Vinci', description: 'Renaissance polymath and painter.', imageUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=800&auto=format&fit=crop' },
-  { name: 'Ada Lovelace', description: 'First computer programmer.', imageUrl: 'https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=800&auto=format&fit=crop' }
+  { 
+    name: 'The Tech Visionary', 
+    description: 'A revolutionary mind who transformed how humanity interacts with technology.', 
+    imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop' 
+  },
+  { 
+    name: 'The Rocket Engineer', 
+    description: 'A pioneer pushing the boundaries of interplanetary travel and clean energy.', 
+    imageUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000&auto=format&fit=crop' 
+  },
+  { 
+    name: 'The Atomic Scientist', 
+    description: 'Pioneering researcher on radioactivity who changed the face of physics.', 
+    imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop' 
+  },
+  { 
+    name: 'The Theoretical Mind', 
+    description: 'Developer of the laws that govern the universe and the structure of time.', 
+    imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000&auto=format&fit=crop' 
+  },
+  { 
+    name: 'The Polymath Genius', 
+    description: 'Renaissance individual whose mastery spanned from art to engineering.', 
+    imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1000&auto=format&fit=crop' 
+  },
+  { 
+    name: 'The Original Coder', 
+    description: 'The mathematical architect who wrote the first sequences of machine logic.', 
+    imageUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000&auto=format&fit=crop' 
+  }
 ];
 
 interface DB {
